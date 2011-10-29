@@ -6,7 +6,43 @@ http://code.google.com/p/clamav-cron/
 
 I've also included my slightly remixed version "clamav-cron-est-0.7"
 
-My version only emails on error, or virus detection rather then on every run.
+My version only emails on error, or virus detection rather than on every run.
 It also rearranges the email, so the scan summary is at the top of the email, rather than the bottom.
 
 My intention it to Pythonize the whole thing and do the output-mashing in memory, then send an email without relying on the *NIX mail command. 
+
+P.S. Usage text is shamelessly stolen from Stefano's project page, as it still applies.
+
+-----
+USAGE
+-----
+
+Summary:
+This is a simple Bash script for those who want to schedule the following tasks via cron:
+
+update the ClamAV virus database (freshclam);
+perform personal system scan (clamscan);
+send a brief report via e-mail;
+without any knowledge about ClamAV configuration files (such as clamd.conf or freshclam.conf) and without running the ClamAV daemon. You just have to configure the e-mail address(es) that will receive the report.
+
+Dependencies:
+
+To succesfilly run clamav-cron the following dependencies needs to be satisfied:
+
+the ClamAV engine (look at ClamAV download center);
+a mail server like Sendmail;
+
+How to use:
+
+1. Download clamav-cron somewhere like /usr/local/bin/ and give it execute permission:
+      wget http://clamav-cron.googlecode.com/files/clamav-cron-0.6 -O /usr/local/bin/clamav-cron
+      chmod 755 /usr/local/bin/clamav-cron
+
+Simply open the clamav-cron script with your editor and edit the "User configuration" section following the instructions;
+schedule the clamav-cron script via Cron in the preferred way. For example, you can install the clamav-cron in the crontab typing crontab -e from the user shell and entering a line like this:
+
+45 23 * * 6 /usr/local/bin/clamav-cron /home
+
+Cron will run clamav-cron every Saturday at 23:45 (11:45 pm) to recursevly scan the whole /home tree. At the end of task it will send a notification e-mail to the users specified at point 2. For more crontab option type man 5 crontab.
+
+
