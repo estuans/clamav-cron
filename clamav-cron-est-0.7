@@ -1,8 +1,9 @@
 #!/bin/bash
 #
-# clamav-cron v. 0.6 - Copyright © 2009, Stefano Stagnaro
-# This is Free Software released under the GNU GPL license version 3
-
+# clamav-cron-est v. 0.7 - Copyright © 2011, Ben Field et al.
+#This uses code originally written by Stefano Stagnaro hosted on http://code.google.com/p/clamav-cron/
+#This is Free Software released under the GNU GPL license version 3
+#
 #============================================#
 #        User configuration section          #
 #============================================#
@@ -13,13 +14,13 @@ CV_UPLOGFILE="$HOME/clamav-update-cron.log"
 CV_AMLOGFILE="$HOME/clamav-amal-cron.log"
 
 # Notification e-mail sender (could be fake):
-CV_MAILFROM="clamav@jupiter.colorconfidence.com"
+CV_MAILFROM="clamav@$HOSTNAME"
 
 # Notification e-mail recipient:
-CV_MAILTO="bfield@colorconfidence.com"
+CV_MAILTO="ben@interiussystems.co.uk"
 
 # Notification e-mail secondary recipients:
-CV_MAILTO_CC="sysadmins@colorconfidence.com;"
+CV_MAILTO_CC=""
 
 # Notification e-mail subject:
 CV_SUBJECT="$HOSTNAME - ClamAV scan report"
