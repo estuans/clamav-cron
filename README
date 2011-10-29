@@ -1,0 +1,12 @@
+This a modified version of the clamav-cron script by Stefan Steganaro currently hosted on GoogleCode.
+I'm including the vanilla 0.6 from GCode for the purposes of reference, and if anyone wants it.
+
+http://code.google.com/p/clamav-cron/
+
+
+I've also included my slightly remixed version "clamav-cron-est-0.7"
+
+My version only emails on error, or virus detection rather then on every run.
+It also rearranges the email, so the scan summary is at the top of the email, rather than the bottom.
+
+My intention it to Pythonize the whole thing and do the output-mashing in memory, then send an email without relying on the *NIX mail command. 

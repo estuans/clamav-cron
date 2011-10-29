@@ -1,0 +1,79 @@
+#!/bin/bash
+#
+# clamav-cron v. 0.6 - Copyright © 2009, Stefano Stagnaro
+# This is Free Software released under the GNU GPL license version 3
+
+#============================================#
+#        User configuration section          #
+#============================================#
+
+# Log file name and its path:
+CV_LOGFILE="$HOME/clamav-cron.log"
+CV_UPLOGFILE="$HOME/clamav-update-cron.log"
+CV_AMLOGFILE="$HOME/clamav-amal-cron.log"
+
+# Notification e-mail sender (could be fake):
+CV_MAILFROM="clamav@jupiter.colorconfidence.com"
+
+# Notification e-mail recipient:
+CV_MAILTO="bfield@colorconfidence.com"
+
+# Notification e-mail secondary recipients:
+CV_MAILTO_CC="sysadmins@colorconfidence.com;"
+
+# Notification e-mail subject:
+CV_SUBJECT="$HOSTNAME - ClamAV scan report"
+
+#============================================#
+
+CV_TARGET="$1"
+CV_VERSION="0.6"
+
+if [ -e $CV_LOGFILE ]
+then
+	/bin/rm $CV_LOGFILE
+fi
+
+if [ -e $CV_UPLOGFILE ]
+then
+        /bin/rm $CV_UPLOGFILE
+fi
+
+if [ -e $CV_AMLOGFILE ]
+then
+        /bin/rm $CV_AMLOGFILE
+fi
+
+if [ -z "$1" ]
+then
+	CV_TARGET="$HOME"
+fi
+
+#To be read on stdout (and root mail):
+echo -e `basename $0` v. $CV_VERSION - Copyright 2009, Stefano Stagnaro '\n'
+
+#To be read on logfile (sent via sendmail):
+echo -e $CV_SUBJECT - $(date) '\n' >> $CV_LOGFILE
+echo -e Script: `basename $0` v. $CV_VERSION - Copyright 2009, Stefano Stagnaro  >> $CV_LOGFILE
+echo -e Scanned: $CV_TARGET on $HOSTNAME'\n' >> $CV_LOGFILE
+
+/usr/bin/freshclam --log=$CV_UPLOGFILE --user $USER --verbose
+
+#To be read on stdout (and root mail):
+echo -e '------------------------------------\n'
+
+/usr/bin/clamscan --infected --log=$CV_LOGFILE --recursive $CV_TARGET
+CLAMSCAN=$?
+
+if [ "$CLAMSCAN" -eq "1" ]
+then
+	CV_SUBJECT="[VIRUS!] "$CV_SUBJECT
+	cat $CV_LOGFILE $CV_UPLOGFILE > $CV_AMLOGFILE
+	/bin/mail -s "$CV_SUBJECT" -c $CV_MAILTO_CC $CV_MAILTO -- -f $CV_MAILFROM < $CV_AMLOGFILE
+elif [ "$CLAMSCAN" -gt "1" ]
+then
+	CV_SUBJECT="[ERR] "$CV_SUBJECT
+	cat $CV_LOGFILE $CV_UPLOGFILE > $CV_AMLOGFILE
+	/bin/mail -s "$CV_SUBJECT" -c $CV_MAILTO_CC $CV_MAILTO -- -f $CV_MAILFROM < $CV_AMLOGFILE
+fi
+
