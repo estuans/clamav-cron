@@ -61,4 +61,4 @@ then
 	CV_SUBJECT="[ERR] "$CV_SUBJECT
 fi
 
-/bin/mail -s "$CV_SUBJECT" -c $CV_MAILTO_CC $CV_MAILTO -- -f $CV_MAILFROM < $CV_LOGFILE
+/bin/mail -s "$CV_SUBJECT" $CV_MAILTO -- -f $CV_MAILFROM < $CV_LOGFILE
